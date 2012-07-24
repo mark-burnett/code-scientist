@@ -13,11 +13,10 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import gzip
 import os
-import tarfile
 import tempfile
 
+from code_scientist.instruments import file_wrappers
 from code_scientist import utils
 
 class GzipEntropy(object):
@@ -25,19 +24,13 @@ class GzipEntropy(object):
         self.file_filters = file_filters
 
     def make_measurements(self, specimen_group):
-        tar_archive, bare_tar_file = self._create_tar_archive()
+        tar_archive = file_wrappers.TarWrapper()
         self._add_group_to_tar_archive(tar_archive, specimen_group)
-        tar_archive.close()
 
-        compressed_file = self._compress_archive(bare_tar_file)
+        compressed_file = self._compress_archive(tar_archive)
 
-        bare_tar_file.flush()
-        uncompressed_size = os.fstat(bare_tar_file.fileno()).st_size
-        bare_tar_file.close()
-
-        compressed_file.flush()
-        compressed_size = os.fstat(compressed_file.fileno()).st_size
-        compressed_file.close()
+        uncompressed_size = tar_archive.size
+        compressed_size = compressed_file.size
 
         result = {
                 'information_content': compressed_size,
@@ -51,17 +44,10 @@ class GzipEntropy(object):
         pass
 
 
-    def _create_tar_archive(self):
-        bare_file = tempfile.TemporaryFile()
-        tar_archive = tarfile.open(fileobj=bare_file, mode='w')
-
-        return tar_archive, bare_file
-
     def _add_group_to_tar_archive(self, tar_archive, specimen_group):
         for filename in specimen_group:
             filtered_file = self._filter_file(filename)
-            tar_archive.addfile(tar_archive.gettarinfo(fileobj=filtered_file),
-                    fileobj=filtered_file)
+            tar_archive.add_file(filtered_file)
             filtered_file.close()
 
     def _filter_file(self, filename):
@@ -78,13 +64,11 @@ class GzipEntropy(object):
         return result_obj
 
     def _compress_archive(self, tar_archive):
-        bare_file = tempfile.TemporaryFile()
-        compressed_file = gzip.GzipFile('', mode='wb', fileobj=bare_file)
-
+        compressed_file = file_wrappers.GzipWrapper()
         tar_archive.seek(0)
+
         for line in tar_archive:
             compressed_file.write(line)
 
-        compressed_file.close()
-
-        return bare_file
+        compressed_file.finish()
+        return compressed_file

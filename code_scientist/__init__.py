@@ -16,8 +16,6 @@
 import logging
 import logging.handlers
 
-import primitives
-
 try:
     nh = logging.handlers.NullHandler()
 except AttributeError:

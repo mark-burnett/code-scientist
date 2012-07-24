@@ -13,6 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import os.path
 import re
 
 def regex_filter(regex, iterable):
@@ -24,3 +25,12 @@ def compose(function_sequence, target):
     for f in function_sequence:
         value = f(value)
     return value
+
+def walk_files(path):
+    if os.path.isfile(path):
+        yield path
+        return
+
+    for directory, subdirs, files in os.walk(path):
+        for f in files:
+            yield os.path.join(directory, f)
