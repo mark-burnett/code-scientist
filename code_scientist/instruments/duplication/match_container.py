@@ -16,6 +16,8 @@
 import collections
 import copy
 
+import itertools
+
 class MatchContainer(object):
     def __init__(self):
         self.token_walkers = []
@@ -27,7 +29,8 @@ class MatchContainer(object):
     def add(self, new_token_walker):
         skips = [0]
         for tw in self.token_walkers:
-            key, a, b, skip = tw.get_longest_match(new_token_walker)
+            key, a, b, skip = _get_longest_match(copy.copy(tw),
+                    copy.copy(new_token_walker))
             self.matches[key].add(a)
             self.matches[key].add(b)
             skips.append(skip)
@@ -40,3 +43,31 @@ class MatchContainer(object):
 
 MatchIdentifier = collections.namedtuple('MatchIdentifier',
         'filename start_line stop_line token_count')
+
+def _get_longest_match(left, right):
+    skip = -1
+    left_stop_line = left.stop_line
+    right_stop_line = right.stop_line
+    matching_token_values = []
+
+    for left_token, right_token in itertools.izip(left, right):
+        if left_token.token_value != right_token.token_value:
+            break
+
+        skip += 1
+        left_stop_line = left_token.line_number
+        right_stop_line = right_token.line_number
+        matching_token_values.append(left_token.token_value)
+
+#    count = left.end_position - left.start_position + skip + 1
+    count = skip + 1
+    return (''.join(matching_token_values),
+            MatchIdentifier(left.filename,
+                left.start_line, left_stop_line,
+                count),
+            MatchIdentifier(right.filename,
+                right.start_line, right_stop_line,
+#                right.tokens[0].line_number,
+#                right_stop_line_number,
+                count),
+            skip)

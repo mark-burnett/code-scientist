@@ -26,11 +26,13 @@ class Duplication(object):
         matches = collections.defaultdict(match_container.MatchContainer)
 
         for filename, tokenlist in all_tokens.iteritems():
-            token_walker = token.TokenWalker(filename, tokenlist,
-                    end_position=self.minimum_token_count - 1)
-            for tw in token_walker:
-                skip = matches[tw.hard_hash].add(token_walker)
-                tw.skip(skip)
+            skip = 0
+            for chain_hash, token_iter in token.TokenWindowIterator(filename,
+                    tokenlist, self.minimum_token_count):
+                if skip > 0:
+                    skip -= 1
+                    continue
+                skip = matches[chain_hash].add(token_iter)
 
         filtered_matches = _filter_matches(matches)
 
@@ -39,9 +41,9 @@ class Duplication(object):
 
 def _filter_matches(matches):
     actual_matches = []
-    for key, match_container in matches.iteritems():
-        if match_container.has_match:
-            actual_matches.append(match_container)
+    for key, mc in matches.iteritems():
+        if mc.has_match:
+            actual_matches.append(mc)
     return actual_matches
 
 def _create_report(all_matches, token_count):

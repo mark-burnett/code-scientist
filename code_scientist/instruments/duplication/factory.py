@@ -33,6 +33,6 @@ def _process_tokens(raw_tokens):
     for file_position, token_type, token_value in raw_tokens:
         stripped_value = token_value.strip()
         if stripped_value and token_type not in pygments.token.Comment:
-            result.append(Token(line_number, token_type, stripped_value))
+            result.append(Token(line_number, stripped_value))
         line_number += token_value.count('\n')
     return result
