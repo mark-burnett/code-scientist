@@ -23,15 +23,22 @@ class Duplication(object):
 
     def make_measurements(self, specimen_group):
         all_tokens = dict((f, factory.get_tokens(f)) for f in specimen_group)
+        hooks = hook_container.HookContainer()
         matches = collections.defaultdict(match_container.MatchContainer)
 
         for filename, tokenlist in all_tokens.iteritems():
             skip = 0
-            for chain_hash, token_iter in token.TokenWindowIterator(filename,
+            for chain_hash, token_iter in token.TokenIteratorCreator(filename,
                     tokenlist, self.minimum_token_count):
                 if skip > 0:
+#                    print 'skip = ', skip
                     skip -= 1
                     continue
+                print filename[-10:], 'chain hash (%s):' % len(chain_hash), chain_hash[:10], '...', chain_hash[-10:]
+                if chain_hash in hooks:
+                    # find match extent and add match
+                else:
+                    # add hook
                 skip = matches[chain_hash].add(token_iter)
 
         filtered_matches = _filter_matches(matches)

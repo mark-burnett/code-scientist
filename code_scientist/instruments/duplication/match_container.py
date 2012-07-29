@@ -14,8 +14,6 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import collections
-import copy
-
 import itertools
 
 class MatchContainer(object):
@@ -29,12 +27,12 @@ class MatchContainer(object):
     def add(self, new_token_walker):
         skips = [0]
         for tw in self.token_walkers:
-            key, a, b, skip = _get_longest_match(copy.copy(tw),
-                    copy.copy(new_token_walker))
+            key, a, b, skip = _get_longest_match(tw.clone(),
+                    new_token_walker.clone())
             self.matches[key].add(a)
             self.matches[key].add(b)
             skips.append(skip)
-        self.token_walkers.append(copy.copy(new_token_walker))
+        self.token_walkers.append(new_token_walker.clone())
         return max(skips)
 
     @property
@@ -45,13 +43,17 @@ MatchIdentifier = collections.namedtuple('MatchIdentifier',
         'filename start_line stop_line token_count')
 
 def _get_longest_match(left, right):
-    skip = -1
+    print left
+    print right
+#    raise RuntimeError("Fin.")
+    skip = 0
     left_stop_line = left.stop_line
     right_stop_line = right.stop_line
     matching_token_values = []
 
     for left_token, right_token in itertools.izip(left, right):
         if left_token.token_value != right_token.token_value:
+            print 'match_broken at left = %s, right = %s' % (left_token, right_token)
             break
 
         skip += 1

@@ -28,6 +28,10 @@ class TokenIterator(object):
         self.stop_line = self.tokens[self.index].line_number
         self._done = False
 
+    def __str__(self):
+        return "Iterator for at token %d of %d for %s = %s" % (
+                self.index, len(self.tokens), self.filename,
+                self.tokens[self.index].token_value)
 
     def __iter__(self):
         return self
@@ -39,7 +43,11 @@ class TokenIterator(object):
             raise StopIteration()
         return self.tokens[self.index]
 
-class TokenWindowIterator(object):
+    def clone(self):
+        return TokenIterator(self.filename, self.tokens,
+                self.index, self.start_line)
+
+class TokenIteratorCreator(object):
     def __init__(self, filename, tokens, window_size=100):
         self.filename = filename
         self.tokens = tokens
@@ -53,6 +61,7 @@ class TokenWindowIterator(object):
 
     def next(self):
         self._i += 1
+        self._last_hard_hash = None
         if self._done or self._i + self.window_size >= len(self.tokens):
             self._done = True
             raise StopIteration()
