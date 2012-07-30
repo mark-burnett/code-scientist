@@ -44,6 +44,10 @@ class BaseHookTest(unittest.TestCase):
     def test_stop(self):
         self.assertEqual('77', self.base_hook.stop)
 
+#    def test_key(self):
+#        self.assertEqual(''.join(map(str, range(42, 78))),
+#                self.base_hook.get_key())
+
 class HookTest(unittest.TestCase):
     def setUp(self):
         self.test_filename = 'test/file/name.py'
