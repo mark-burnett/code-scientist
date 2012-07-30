@@ -40,4 +40,13 @@ class Duplication(object):
                     matches.add(new_hook, existing_hook)
                 hooks[hook_key].append(new_hook)
 
-        return matches
+        total_tokens = sum(len(tokens) for tokens in all_tokens.itervalues())
+        return _create_report(matches, total_tokens)
+
+def _create_report(matches, total_tokens):
+    duplicated_token_count = 0
+    for match_set in matches._matches.itervalues():
+        token_counts = [m.stop_index - m.start_index for m in match_set]
+        duplicated_token_count += sum(token_counts) - max(token_counts)
+    return { 'duplication_fraction': float(duplicated_token_count) / total_tokens,
+             'matches': matches._matches.values() }
