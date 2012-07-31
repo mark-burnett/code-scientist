@@ -20,7 +20,7 @@ import pygments.lexers
 import pygments.token
 
 
-Token = collections.namedtuple('Token', 'line_number token_value')
+Token = collections.namedtuple('Token', 'line_number token_value token_type')
 
 
 def get_tokens(filename):
@@ -38,6 +38,6 @@ def _process_tokens(raw_tokens):
     for file_position, token_type, token_value in raw_tokens:
         stripped_value = token_value.strip()
         if stripped_value and token_type not in pygments.token.Comment:
-            result.append(Token(line_number, stripped_value))
+            result.append(Token(line_number, stripped_value, str(token_type)))
         line_number += token_value.count('\n')
     return result

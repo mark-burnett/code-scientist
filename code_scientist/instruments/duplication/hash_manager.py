@@ -20,15 +20,20 @@ class HashManager(object):
     def reset(self):
         self._current_hash = None
 
-    def get_key(self, hook):
+    def __call__(self, hook):
         if self._current_hash is None:
-            self._current_hash = _calculate_directly(hook)
+            self._current_hash = self._calculate_directly(hook)
         else:
             self._update_hash(hook)
         return self._current_hash
 
     def _update_hash(self, hook):
-        self._current_hash = _calculate_directly(hook)
+        self._current_hash = self._calculate_directly(hook)
 
-def _calculate_directly(hook):
-    return ''.join(t.token_value for t in hook.walk())
+class ExactHashManager(HashManager):
+    def _calculate_directly(self, hook):
+        return ''.join(t.token_value for t in hook.walk())
+
+class StructuralHashManager(HashManager):
+    def _calculate_directly(self, hook):
+        return ''.join(t.token_type for t in hook.walk())

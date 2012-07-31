@@ -2,6 +2,7 @@
 import pprint
 #from code_scientist.instruments import entropy, duplication
 from code_scientist.instruments import duplication
+from code_scientist.instruments.duplication import hash_manager, lexer
 from code_scientist.specimen_groups import regex
 
 from code_scientist.filters.regex import empty_line, comment_line
@@ -22,7 +23,10 @@ def main():
 #    filtered_sg = apply_filters(sg, [empty_line, comment_line])
 
 #    duplication_instrument = duplication.Duplication()
-    duplication_instrument = duplication.Duplication()
+    duplication_instrument = duplication.Duplication(
+            exact_hash_manager=hash_manager.ExactHashManager(),
+            structural_hash_manager=hash_manager.StructuralHashManager(),
+            lexer=lexer)
     results = duplication_instrument.make_measurements(sg)
     pprint.pprint(results)
 

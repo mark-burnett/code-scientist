@@ -13,40 +13,52 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import collections
-
-import hash_manager
-import factories
-import lexer
-import match_container
+import algorithm
 
 class Duplication(object):
-    def __init__(self, minimum_token_count=100):
-        self.minimum_token_count = minimum_token_count
+    def __init__(self, exact_hash_manager=None,
+            structural_hash_manager=None,
+            exact_minimum_count=100,
+            structural_minimum_count=200,
+            lexer=None):
+        self._exact_hash_manager = exact_hash_manager
+        self._structural_hash_manager = structural_hash_manager
 
-    def make_measurements(self, specimen_group):
-        all_tokens = dict((f, lexer.get_tokens(f)) for f in specimen_group)
-        hooks = collections.defaultdict(list)
-        matches = match_container.MatchContainer()
-        hm = hash_manager.HashManager()
+        self._exact_minimum_count = exact_minimum_count
+        self._structural_minimum_count = structural_minimum_count
 
-        for filename, tokenlist in all_tokens.iteritems():
-#            print 'file:', filename, 'num_tokens:', len(tokenlist), 'num_lines:', tokenlist[-1].line_number
-            hm.reset()
-            for new_hook in factories.create_hooks(filename,
-                    tokenlist, self.minimum_token_count):
-                hook_key = hm.get_key(new_hook)
-                for existing_hook in hooks[hook_key]:
-                    matches.add(new_hook, existing_hook)
-                hooks[hook_key].append(new_hook)
+        self._lexer = lexer
+
+    def make_measurements(self, filenames):
+        all_tokens = dict((f, self._lexer.get_tokens(f)) for f in filenames)
+
+        exact_matches = algorithm.find_duplication(all_tokens,
+                self._exact_hash_manager, self._exact_minimum_count)
+
+        structural_matches = algorithm.find_duplication(all_tokens,
+                self._structural_hash_manager, self._structural_minimum_count)
 
         total_tokens = sum(len(tokens) for tokens in all_tokens.itervalues())
-        return _create_report(matches, total_tokens)
+        return _create_report(exact_matches, structural_matches,
+                total_tokens)
 
-def _create_report(matches, total_tokens):
-    duplicated_token_count = 0
-    for match_set in matches._matches.itervalues():
+
+def _create_report(exact_matches, structural_matches, total_tokens):
+    exact_duplicated_token_count = _count_duplicate_tokens(exact_matches)
+    structural_duplicated_token_count = _count_duplicate_tokens(
+            structural_matches)
+
+    return { 'total_tokens': total_tokens,
+             'exact_duplication_fraction':
+                 float(exact_duplicated_token_count) / total_tokens,
+             'structural_duplication_fraction':
+                 float(structural_duplicated_token_count) / total_tokens,
+             'exact_matches': len(exact_matches),
+             'structural_matches': len(structural_matches) }
+
+def _count_duplicate_tokens(matches):
+    total = 0
+    for match_set in matches:
         token_counts = [m.stop_index - m.start_index for m in match_set]
-        duplicated_token_count += sum(token_counts) - max(token_counts)
-    return { 'duplication_fraction': float(duplicated_token_count) / total_tokens,
-             'matches': matches._matches.values() }
+        total += sum(token_counts) - max(token_counts)
+    return total
