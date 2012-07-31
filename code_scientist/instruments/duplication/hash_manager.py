@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-class HashManager(object):
+class BaseHashManager(object):
     def __init__(self):
         self._current_hash = None
 
@@ -30,10 +30,10 @@ class HashManager(object):
     def _update_hash(self, hook):
         self._current_hash = self._calculate_directly(hook)
 
-class ExactHashManager(HashManager):
+class ExactHashManager(BaseHashManager):
     def _calculate_directly(self, hook):
         return ''.join(t.token_value for t in hook.walk())
 
-class StructuralHashManager(HashManager):
+class StructuralHashManager(BaseHashManager):
     def _calculate_directly(self, hook):
         return ''.join(t.token_type for t in hook.walk())

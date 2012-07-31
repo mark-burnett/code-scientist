@@ -18,8 +18,9 @@ import unittest
 from code_scientist.instruments.duplication import hash_manager
 
 class MockToken(object):
-    def __init__(self, value):
+    def __init__(self, value, ttype):
         self.token_value = value
+        self.token_type = ttype
 
 class MockHook(object):
     def __init__(self, tokens, start_index, stop_index):
@@ -31,12 +32,26 @@ class MockHook(object):
         for i in xrange(self.start_index, self.stop_index + 1):
             yield self.tokens[i]
 
-class HashManagerTest(unittest.TestCase):
+class ExactHashManagerTest(unittest.TestCase):
     def setUp(self):
-        self.tokens = [MockToken(str(x)) for x in xrange(100)]
+        self.tokens = [MockToken(str(x), str(100-x)) for x in xrange(100)]
         self.hook = MockHook(self.tokens, 42, 77)
 
-    def test_calculate_directly(self):
+        self.exact_hm = hash_manager.ExactHashManager()
+
+    def test_initial_hash(self):
         expected_hash = ''.join(str(x) for x in xrange(42, 78))
         self.assertEqual(expected_hash,
-                hash_manager._calculate_directly(self.hook))
+                self.exact_hm(self.hook))
+
+class StructuralHashManagerTest(unittest.TestCase):
+    def setUp(self):
+        self.tokens = [MockToken(str(x), str(100-x)) for x in xrange(100)]
+        self.hook = MockHook(self.tokens, 42, 77)
+
+        self.structural_hm = hash_manager.StructuralHashManager()
+
+    def test_initial_hash(self):
+        expected_hash = ''.join(str(100 - x) for x in xrange(42, 78))
+        self.assertEqual(expected_hash,
+                self.structural_hm(self.hook))
