@@ -23,15 +23,15 @@ class Entropy(object):
     def __init__(self, file_filters=[]):
         self.file_filters = file_filters
 
-    def make_measurements(self, specimen_group, reference_specimen_group=None):
-        if reference_specimen_group:
-            return self._comparative_measurements(specimen_group,
-                    reference_specimen_group)
-        return self._singular_measurements(specimen_group)
+    def make_measurements(self, filenames, reference_filenames=None):
+        if reference_filenames:
+            return self._comparative_measurements(filenames,
+                    reference_filenames)
+        return self._singular_measurements(filenames)
 
 
-    def _singular_measurements(self, specimen_group):
-        aggregate_file = self._concatenate(specimen_group)
+    def _singular_measurements(self, filenames):
+        aggregate_file = self._concatenate(filenames)
 
         uncompressed_size = _file_size(aggregate_file)
         compressed_size = _compress(aggregate_file)
@@ -40,13 +40,13 @@ class Entropy(object):
                 'DRYness': float(compressed_size) / uncompressed_size }
 
     def _comparative_measurements(self,
-            specimen_group, reference_specimen_group):
-        aggregate_file = self._concatenate(specimen_group)
+            filenames, reference_filenames):
+        aggregate_file = self._concatenate(filenames)
 
         uncompressed_size = _file_size(aggregate_file)
         compressed_size = _compress(aggregate_file)
 
-        reference_aggregate_file = self._concatenate(reference_specimen_group)
+        reference_aggregate_file = self._concatenate(reference_filenames)
         compressed_reference_size = _compress(reference_aggregate_file)
 
         combined_compressed_size = _combine_compress(aggregate_file,
@@ -58,10 +58,10 @@ class Entropy(object):
                 'information_distance': combined_compressed_size
                     - compressed_reference_size }
 
-    def _concatenate(self, specimen_group, output=None):
+    def _concatenate(self, filenames, output=None):
         if output is None:
             output = tempfile.NamedTemporaryFile(delete=False)
-        for specimen in specimen_group:
+        for specimen in filenames:
             source = open(specimen)
             for line in source:
                 filtered_line = utils.compose(self.file_filters, line)

@@ -56,7 +56,6 @@ def _extract_match(left, right):
     r_start_line = right.start.line_number
     l_stop_index, l_stop_line, r_stop_index, r_stop_line = forward_extent
 
-#    key = left.get_key(l_start_index, l_stop_index)
     key = ''.join(left.tokens[i].token_value
             for i in xrange(l_start_index, l_stop_index + 1))
 

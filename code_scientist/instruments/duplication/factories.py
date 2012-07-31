@@ -20,9 +20,5 @@ def create_hooks(filename, tokens, minimum_token_count):
     for start_token_index, t in enumerate(tokens):
         if start_token_index + minimum_token_count <= num_tokens:
             stop_token_index = start_token_index + minimum_token_count - 1
-#            hook_key = _make_key(tokens, start_token_index, stop_token_index)
             yield hook.Hook(filename, tokens,
                     start_token_index, stop_token_index)
-
-#def _make_key(tokens, start, stop):
-#    return ''.join(tokens[i].token_value for i in xrange(start, stop))

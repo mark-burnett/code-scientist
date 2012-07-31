@@ -40,14 +40,6 @@ class BaseHook(object):
         for i in xrange(self.start_index, self.stop_index + 1):
             yield self.tokens[i]
 
-    # XXX This needs to be factored away from here
-#    def get_key(self, start=None, stop=None):
-#        if start is None:
-#            start = self.start_index
-#        if stop is None:
-#            stop = self.stop_index
-#        return ''.join(t.token_value for t in self.tokens[start:stop+1])
-
     def __str__(self):
         return "%s('%s', <tokens>, %s, %s)" % (self.__class__.__name__,
                 self.filename, self.start_index, self.stop_index)
