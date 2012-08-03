@@ -1,0 +1,14 @@
+Input file (yaml or dsl) that describes:
+ * repo details (or flat files)
+ * whether/how to treat a time series from the repo
+ * groups of files to treat together
+ * what measurements to make
+ * what further analysis to do
+ * what figures and reports to make
+        we *might* be able to just specify the reports or analyses and it could
+         figure out the measurement
+
+Overall architecture
+ * dependency resolution that can figure out intermediate steps needed to
+    calculate measurements/analyses from particular inputs
+ * pluggable tools to actually do measurements/analysis
