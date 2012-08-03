@@ -12,20 +12,3 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from code_scientist import utils
-
-def FileGroup(object):
-    def __init__(self, filenames, file_type, lexer):
-        self.filenames = filenames
-        self.file_type = file_type
-        self._lexer = lexer
-
-    @utils.memoize
-    def get_verbatim_content(self):
-        return map(utils.slurp_file, self.filenames)
-
-
-    @utils.memoize
-    def get_content_as_tokens(self):
-        return map(self._lexer, self.get_verbatim_content())
