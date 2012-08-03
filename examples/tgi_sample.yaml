@@ -1,0 +1,55 @@
+target_spec:
+    type: git
+    source: git://git/srv/git.git
+
+    start: 2012-05-01
+    period: 1 week
+
+    file_groups:
+        core_code:
+            - {base_path: lib/perl/Genome, match: *.pm, type: perl}
+        core_tests:
+            - {base_path: lib/perl/Genome, match: *.t, type: perl}
+
+measurement_spec:
+    cyclomatic_complexity:
+        targets:
+            - core_code
+
+    fan_out:
+        targets:
+            - core_code
+
+    circularity:
+        targets:
+            - core_code
+
+    dryness:
+        targets:
+            - core_code
+
+    exact_duplication_fraction:
+        targets:
+            - core_code
+            - core_tests
+        parameters:
+            minimum_match_length: 100
+
+    structural_duplicatoin_fraction:
+        targets:
+            - core_code
+            - core_tests
+        parameters:
+            minimum_match_length: 150
+
+    test_coverage:
+        targets:
+            - core_tests
+        parameters:
+            run_tests_command:
+                'pushd > /dev/null; ur test run; popd > /dev/null'
+
+
+analysis_spec: generate derivative results
+
+report_spec: generate figures & text reports
