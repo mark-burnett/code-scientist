@@ -7,9 +7,9 @@ target_spec:
 
     file_groups:
         core_code:
-            - {base_path: lib/perl/Genome, match: *.pm, type: perl}
+            - {base_path: lib/perl/Genome, match: "*.pm", type: perl}
         core_tests:
-            - {base_path: lib/perl/Genome, match: *.t, type: perl}
+            - {base_path: lib/perl/Genome, match: "*.t", type: perl}
 
 measurement_spec:
     # Size
