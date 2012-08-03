@@ -12,6 +12,19 @@ target_spec:
             - {base_path: lib/perl/Genome, match: *.t, type: perl}
 
 measurement_spec:
+    # Size
+    sloc:
+        targets:
+            - core_code
+            - core_tests
+
+    delta_sloc:
+        targets:
+            - core_code
+            - core_tests
+
+
+    # Complexity
     cyclomatic_complexity:
         targets:
             - core_code
@@ -24,6 +37,8 @@ measurement_spec:
         targets:
             - core_code
 
+
+    # Duplication
     dryness:
         targets:
             - core_code
@@ -42,6 +57,8 @@ measurement_spec:
         parameters:
             minimum_match_length: 150
 
+
+    # Reliability
     test_coverage:
         targets:
             - core_tests
