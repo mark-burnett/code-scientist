@@ -24,7 +24,7 @@ test(some_code)
 '''
 
 FILE_B = '''
-laugh(again)
+other(test_code)
 '''
 
 class FileTest(unittest.TestCase):

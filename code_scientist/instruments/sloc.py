@@ -15,23 +15,12 @@
 
 import logging
 
-from code_scientist import utils
+import tokenizer
 
-class File(object):
-    def __init__(self, name=None, file_type=None, stream=None):
-        self.name = name
-        self.file_type = file_type
-        self._stream = stream
-
-        self.properties = {}
-
-    @utils.memoize
-    def get_contents(self):
-        if self._stream:
-            logging.debug('Getting contents from specified stream.')
-            result = self._stream.read()
-            self._stream.close()
-        else:
-            logging.debug("Loading contents from file '%s'.", self.name)
-            result = open(self.name).read()
-        return result
+class SLOCCounter(object):
+    def execute(self, file_object):
+        if file_object.properties.get('SLOC'):
+            logging.debug('SLOC already computed.')
+            return
+        logging.debug('Computing SLOC using tokenizer.')
+        tokenizer.tokenize(file_object)
