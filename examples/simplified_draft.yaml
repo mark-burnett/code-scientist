@@ -1,0 +1,60 @@
+code_repository:
+    type: git
+    url: 'ssh://git/srv/git/genome.git'
+
+    file_groups:
+        core_code:
+            - {base_path: lib/perl/Genome, match: "*.pm", language: perl}
+        core_tests:
+            - {base_path: lib/perl/Genome, match: "*.t", language: perl}
+
+    start_time: 1/1/2010
+    period: 1 week
+
+metrics:
+    core_code:
+        - sloc
+        - duplication
+        - fan_out
+        - circularity
+
+    core_tests:
+        - sloc
+
+reports:
+  - class: TimeCourseFigure
+    fixed_parameters:
+        filename: 'sloc_v_time.png'
+    variable_parameters:
+        metric: sloc
+
+  - class: TimeCourseFigure
+    fixed_parameters:
+        filename: 'sloc_growth_v_time.png'
+        derivative: True
+    variable_parameters:
+        metric: sloc
+
+  - class: TimeCourseFigure
+    fixed_parameters:
+        filename: 'duplication_v_time.png'
+    variable_parameters:
+        metric: duplication
+        metric_component: fraction
+
+  - class: DistributionFigure
+    fixed_parameters:
+        filename: 'duplication_distribution.png'
+        current_snapshot: True
+        smooth: True
+    variable_parameters:
+        metric: duplication
+        metric_component: counts
+
+  - class: TextReport
+    fixed_parameters:
+        filename: 'duplication_report.txt'
+        template: 'templates/duplication_report.template'
+        current_snapshot: True
+    variable_parameters:
+        metric: duplication
