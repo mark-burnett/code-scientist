@@ -12,18 +12,3 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-def File(object):
-    def __init__(self, filename, file_type, tokenizer=None):
-        self.filename = filename
-        self.file_type = file_type
-
-        self._tokenizer = tokenizer
-
-    @utils.memoize
-    def get_contents(self):
-        return open(self.filename).read()
-
-    @utils.memoize
-    def get_tokens(self):
-        return self._tokenizer(self.get_contents())

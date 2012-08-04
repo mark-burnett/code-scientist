@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import functools.wraps
+import functools
 import os.path
 import re
 
@@ -48,3 +48,4 @@ def memoize(func):
             result = func(*args)
             cache[args] = result
         return result
+    return memoizing_wrapper
