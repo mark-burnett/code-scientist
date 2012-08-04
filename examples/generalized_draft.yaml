@@ -8,6 +8,10 @@ inputs:
             core_tests:
                 - {base_path: lib/perl/Genome, match: "*.t", language: perl}
 
+    analysis_start_time:
+        type: scalar
+        value: 1/1/2010
+
 intermediates:
     # Size
     core_code_sloc:
@@ -61,8 +65,16 @@ analyses:
             bar: fan_out
             baz: [circularity, cyclomatic_complexity]
 
-reports:
-    report_name:
-        class: report_class
+    duplication_fraction_time_course:
+        class: simple_time_course
+        fixed_parameters:
+            period: 1 week
         variable_parameters:
-            some_analysis: analysis_name
+            input: core_code_duplication_fraction
+            start_time: analysis_start_time
+
+reports:
+    duplication_fraction_plot:
+        class: time_course_plot
+        variable_parameters:
+            input: duplication_fraction_time_course
