@@ -1,28 +1,68 @@
-input_spec:
-    - type: git
-      url: 'ssh://git/srv/git/genome.git'
-      file_groups:
-        core_code:
-            - {base_path: lib/perl/Genome, match: "*.pm", language: perl}
-        core_tests:
-            - {base_path: lib/perl/Genome, match: "*.t", language: perl}
+inputs:
+    genome_repo:
+        type: git
+        url: 'ssh://git/srv/git/genome.git'
+        file_groups:
+            core_code:
+                - {base_path: lib/perl/Genome, match: "*.pm", language: perl}
+            core_tests:
+                - {base_path: lib/perl/Genome, match: "*.t", language: perl}
 
-output_spec:
-    sloc:
+intermediates:
+    # Size
+    core_code_sloc:
+        class: sloc
         targets:
             - core_code
-            - core_tests
 
-    test_code_cc:
-        class: cyclomatic_complexity
+    core_tests_sloc:
+        class: sloc
         targets:
             - core_tests
-        parameters:
-            blah: 5
 
-    core_code_cc:
+    # Complexity
+    cyclomatic_complexity:
         class: cyclomatic_complexity
         targets:
             - core_code
-        parameters:
-            blah: 5
+
+    fan_out:
+        class: fan_out
+        targets:
+            - core_code
+
+    circularity:
+        class: circularity
+        targets:
+            - core_code
+
+    # Duplication
+    core_code_duplication_fraction:
+        class: duplication_fraction
+        targets:
+            - core_code
+
+    core_code_duplicates:
+        class: duplicates
+        targets:
+            - core_code
+
+    core_tests_duplication_fraction:
+        class: duplication_fraction
+        targets:
+            - core_tests
+
+analyses:
+    analysis_name:
+        class: analysis_class
+        fixed_parameters:
+            foo: 3
+        variable_parameters:
+            bar: fan_out
+            baz: [circularity, cyclomatic_complexity]
+
+reports:
+    report_name:
+        class: report_class
+        variable_parameters:
+            some_analysis: analysis_name
