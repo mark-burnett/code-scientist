@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 #    Copyright (C) 2012 Mark Burnett
 #
 #    This program is free software: you can redistribute it and/or modify
@@ -13,5 +14,29 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-def create_analyzers(definition, target, instruments):
-    pass
+import argparse
+import logging.config
+import sys
+
+from code_scientist.factories import strategy
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('filename', type=str,
+            help='YAML file describing measurements to make')
+    parser.add_argument('--config', type=str, default='logging.ini',
+            help='Logging configuration.')
+
+    return parser.parse_args()
+
+def setup_logging(filename):
+    logging.config.fileConfig(filename)
+
+def main(filename):
+    s = strategy.parse_input(filename)
+    s.execute()
+
+if '__main__' == __name__:
+    args = parse_args()
+    setup_logging(args.config)
+    main(args.filename)

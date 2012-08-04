@@ -1,4 +1,4 @@
-code_repository:
+code:
     type: git
     url: 'ssh://git/srv/git/genome.git'
 

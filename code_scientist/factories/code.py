@@ -15,5 +15,5 @@
 
 import logging
 
-def create_reporters(definitions):
-    logging.debug('Creating reporter objects from definitions.')
+def create_code(definitions):
+    logging.debug('Creating code objects from definitions.')

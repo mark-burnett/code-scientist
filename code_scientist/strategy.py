@@ -13,5 +13,11 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-def create_target(definition):
-    pass
+import logging
+
+class Strategy(object):
+    def __init__(self, code, instruments, reporters):
+        pass
+
+    def execute(self):
+        pass

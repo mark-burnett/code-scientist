@@ -13,5 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-def create_instruments(definition, target):
-    pass
+import logging
+
+def create_instruments(definitions):
+    logging.debug('Creating instrument objects from definitions.')

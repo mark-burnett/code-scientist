@@ -14,6 +14,25 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import logging
+import yaml
 
-def create_reporters(definitions):
-    logging.debug('Creating reporter objects from definitions.')
+import code
+import instrument
+import report
+
+from code_scientist import strategy
+
+def parse_input(filename):
+    with open(filename) as f:
+        logging.debug('Parsing input file.')
+        definitions = yaml.load(f.read())
+        logging.debug('Input file successfully parsed.')
+    return build_strategy(definitions)
+
+def build_strategy(definitions):
+    logging.debug('Building graph from definitions.')
+    target = code.create_code(definitions.get('code'))
+    metrics = instrument.create_instruments(definitions.get('metrics'))
+    reporters = report.create_reporters(definitions.get('reports'))
+
+    return strategy.Strategy(target, metrics, reporters)
