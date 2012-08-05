@@ -2,31 +2,23 @@ code:
     type: git
     url: 'ssh://git/srv/git/genome.git'
 
-    file_groups:
-        core_code:
-            - {base_path: lib/perl/Genome, match: "*.pm", language: perl}
-        core_tests:
-            - {base_path: lib/perl/Genome, match: "*.t", language: perl}
+file_sets:
+    core_code:
+        - {base_path: lib/perl/Genome, match: "*.pm", language: perl}
+    core_tests:
+        - {base_path: lib/perl/Genome, match: "*.t", language: perl}
 
+&standard_time
     start_time: 1/1/2010
     period: 1 week
 
-metrics:
-    core_code:
-        - sloc
-        - duplication
-        - fan_out
-        - circularity
-
-    core_tests:
-        - sloc
-
 reports:
-  - class: TimeCourseFigure
-    fixed_parameters:
+  - type: TimeCourseFigure
+    input: [core_code, core_tests]
+    parameters:
         filename: 'sloc_v_time.png'
-    variable_parameters:
         metric: sloc
+        time: *standard_time
 
   - class: TimeCourseFigure
     fixed_parameters:
