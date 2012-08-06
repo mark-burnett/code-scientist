@@ -1,4 +1,4 @@
-#    Copyright (C) 2012 Mark Burnett, David Morton
+#    Copyright (C) 2012 Mark Burnett
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -12,13 +12,3 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
-
-def __eq__(self, sister):
-    assert self.id is not None
-    return self.id == sister.id
-
-Base.__eq__ = __eq__

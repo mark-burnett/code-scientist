@@ -1,4 +1,4 @@
-#    Copyright (C) 2012 Mark Burnett, David Morton
+#    Copyright (C) 2012 Mark Burnett
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -13,12 +13,21 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sqlalchemy.ext.declarative import declarative_base
+import unittest
 
-Base = declarative_base()
+import sqlalchemy
+import sqlalchemy.orm
 
-def __eq__(self, sister):
-    assert self.id is not None
-    return self.id == sister.id
+from code_scientist.database import base
 
-Base.__eq__ = __eq__
+class BaseDatabaseTest(unittest.TestCase):
+    def setUp(self):
+        self.engine = sqlalchemy.create_engine('sqlite://')
+        base.Base.metadata.create_all(self.engine)
+        base.Base.metadata.bind = self.engine
+        self.Session = sqlalchemy.orm.sessionmaker(bind=self.engine)
+
+        self.session = self.Session()
+
+    def tearDown(self):
+        base.Base.metadata.bind = None
