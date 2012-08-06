@@ -13,8 +13,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sqlalchemy import Column, ForeignKey, relation
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy import Integer, String
+from sqlalchemy.orm import relationship
 
 import base
 
@@ -23,9 +24,8 @@ class FileSet(base.Base):
 
     id = Column(Integer, primary_key=True)
     snapshot_id = Column(Integer, ForeignKey('snapshot.id'))
-    file_set_category_id = Column(Integer, ForiegnKey('file_set_category.id'))
+    file_set_category_id = Column(Integer, ForeignKey('file_set_category.id'))
 
-    snapshot = relation('Snapshot', backref='file_sets')
-    file_set_category = relation('FileSetCategory', backref='file_sets')
-    files = relation('File', secondary='file_set_files', backref='file_sets'),
-            order_by='File.id')
+    snapshot = relationship('Snapshot', backref='file_sets')
+    file_set_category = relationship('FileSetCategory', backref='file_sets')
+    files = relationship('File', secondary='file_set_files', backref='file_sets')

@@ -18,5 +18,8 @@ from sqlalchemy import Integer, String
 
 import base
 
-instrument_metrics = Table('instrument_metrics', base.Base.metadata,
-    Column(Integer, ForeignKey(
+file_set_files = Table('file_set_files', base.Base.metadata,
+    Column('file_id', Integer, ForeignKey('file.id'),
+        primary_key=True, nullable=False),
+    Column('file_set_id', Integer, ForeignKey('file_set.id'),
+        primary_key=True, nullable=False))

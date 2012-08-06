@@ -13,8 +13,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sqlalchemy import Column, ForeignKey, UniqueConstraint, relation
+from sqlalchemy import Column, ForeignKey, UniqueConstraint
 from sqlalchemy import Integer, String
+from sqlalchemy.orm import relationship
 
 import base
 
@@ -30,11 +31,11 @@ def _make_class_dict(kind):
         'instrument_id': Column(Integer, ForeignKey('instrument.id')),
         'metric_id': Column(Integer, ForeignKey('metric.id')),
         lower_kind + '_id': Column(Integer, ForeignKey(
-                lower_kind + '_id'),
+                lower_kind + '_id')),
 
-        'instrument' = relation('Instrument', backref=kind_metric_value),
-        'metric' = relation('Metric', backref=kind_metric_value),
-        lower_kind = relation(kind, backref=kind_metric_value),
+        'instrument': relationship('Instrument', backref=kind_metric_value),
+        'metric': relationship('Metric', backref=kind_metric_value),
+        lower_kind: relationship(kind, backref=kind_metric_value),
 
         '__table_args__': (UniqueConstraint('instrument_id', 'metric_id',
                         lower_kind + '_id'), {})
@@ -44,7 +45,7 @@ def _make_class_dict(kind):
 
 def _make_metric_value_class(kind):
     new_class_name = kind + 'MetricValue'
-    new_class = type(new_class_name, base.Base, _make_class_dict(kind))
+    new_class = type(new_class_name, (base.Base,), _make_class_dict(kind))
     return new_class
 
 SnapshotMetricValue = _make_metric_value_class('Snapshot')

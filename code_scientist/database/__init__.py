@@ -12,3 +12,16 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+from function import Function
+from file import File
+from file_set import FileSet
+from snapshot import Snapshot
+from repository import Repository
+from file_set_category import FileSetCategory
+
+from metric import Metric
+from instrument import Instrument
+
+from metric_value import FunctionMetricValue, FileMetricValue
+from metric_value import FileSetMetricValue, SnapshotMetricValue

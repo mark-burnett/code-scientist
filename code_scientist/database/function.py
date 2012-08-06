@@ -13,8 +13,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sqlalchemy import Column, ForeignKey, relation
+from sqlalchemy import Column, ForeignKey
 from sqlalchemy import Integer, String
+from sqlalchemy.orm import relationship
 
 import base
 
@@ -25,4 +26,4 @@ class Function(base.Base):
     name = Column(String)
     file_id = Column(Integer, ForeignKey('file.id'))
 
-    file = relation('File', backref='functions')
+    file = relationship('File', backref='functions')

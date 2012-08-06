@@ -13,8 +13,9 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sqlalchemy import Column, ForeignKey, relation
-from sqlalchemy import Integer, DateTime
+from sqlalchemy import Column, ForeignKey
+from sqlalchemy import Integer, String, DateTime
+from sqlalchemy.orm import relationship
 
 import base
 
@@ -25,5 +26,5 @@ class Snapshot(base.Base):
     commit_id = Column(String)
     time = Column(DateTime)
 
-    repository_id = Column(Integer, ForeignKey('repository.id')
-    repository = relation('Repository', backref='snapshots')
+    repository_id = Column(Integer, ForeignKey('repository.id'))
+    repository = relationship('Repository', backref='snapshots')
