@@ -1,5 +1,15 @@
 # code-scientist
 
+## Requirements
+
+sqlalchemy
+
+## Testing
+
+To run unit tests you need the discover module:
+
+python -m discover -s tests
+
 ## Architecture
 
 ### Model
