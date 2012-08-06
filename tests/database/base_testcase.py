@@ -20,14 +20,22 @@ import sqlalchemy.orm
 
 from code_scientist.database import base
 
+
+ENGINE = sqlalchemy.create_engine('sqlite://')
+base.Base.metadata.create_all(ENGINE)
+
+Session = sqlalchemy.orm.sessionmaker(bind=ENGINE)
+
+
 class BaseDatabaseTest(unittest.TestCase):
     def setUp(self):
-        self.engine = sqlalchemy.create_engine('sqlite://')
-        base.Base.metadata.create_all(self.engine)
-        base.Base.metadata.bind = self.engine
-        self.Session = sqlalchemy.orm.sessionmaker(bind=self.engine)
+        self.connection = ENGINE.connect()
+        self.transaction = self.connection.begin()
+        self.session = self.new_session()
 
-        self.session = self.Session()
+    def new_session(self):
+        return Session(bind=self.connection)
 
     def tearDown(self):
-        base.Base.metadata.bind = None
+        self.transaction.rollback()
+        self.session.close()

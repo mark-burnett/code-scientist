@@ -23,7 +23,7 @@ class FileTest(base_testcase.BaseDatabaseTest):
         self.session.add(f)
         self.session.commit()
 
-        session2 = self.Session()
+        session2 = self.new_session()
         f2 = session2.query(File).first()
 
         self.assertEqual(f.id, f2.id)
@@ -39,7 +39,7 @@ class FileTest(base_testcase.BaseDatabaseTest):
 
         self.assertNotEqual(f1, f2)
 
-        session2 = self.Session()
+        session2 = self.new_session()
         f1_2 = session2.query(File).filter_by(path='test path 1').first()
         f2_2 = session2.query(File).filter_by(path='test path 2').first()
 

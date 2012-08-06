@@ -1,5 +1,7 @@
 # code-scientist
 
+A software metrics package.
+
 ## Requirements
 
 sqlalchemy
