@@ -22,7 +22,7 @@ import base
 def _make_class_dict(kind):
     lower_kind = kind.lower()
     kind_id = lower_kind + '_id'
-    kind_metric_value = lower_kind + '_metric_value'
+    kind_metric_value = lower_kind + '_metric_values'
     result = {
         '__tablename__': kind_metric_value,
 
@@ -30,10 +30,11 @@ def _make_class_dict(kind):
         'value': Column(String),
 
         'instrument_id': Column('instrument_id', Integer,
-            ForeignKey('instrument.id')),
-        'metric_id': Column('metric_id', Integer, ForeignKey('metric.id')),
+            ForeignKey('instrument.id'), nullable=False),
+        'metric_id': Column('metric_id', Integer,
+            ForeignKey('metric.id'), nullable=False),
         kind_id: Column(kind_id, Integer, ForeignKey(
-                lower_kind + '.id')),
+                lower_kind + '.id'), nullable=False),
 
         'instrument': relationship('Instrument', backref=kind_metric_value),
         'metric': relationship('Metric', backref=kind_metric_value),
