@@ -20,7 +20,7 @@ from sqlalchemy.orm import relationship
 import base
 
 class FileSet(base.Base):
-    __tablename__ = 'file_set'
+    __tablename__ = 'fileset'
 
     id = Column(Integer, primary_key=True)
     snapshot_id = Column(Integer, ForeignKey('snapshot.id'))

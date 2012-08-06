@@ -13,6 +13,13 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+import sqlalchemy as _sa
+import sqlalchemy.orm as _orm
+import logging
+
+import base as _base
+import tables as _tables
+
 from function import Function
 from file import File
 from file_set import FileSet
@@ -25,3 +32,15 @@ from instrument import Instrument
 
 from metric_value import FunctionMetricValue, FileMetricValue
 from metric_value import FileSetMetricValue, SnapshotMetricValue
+
+def initialize(engine_string='sqlite://'):
+    logging.debug('Creating SQLAlchemy engine for string: %s', engine_string)
+    engine = _sa.create_engine(engine_string)
+
+    logging.debug('Creating tables.')
+    _base.Base.metadata.create_all(engine)
+    _base.Base.metadata.bind = engine
+
+    logging.debug('Creating Session class.')
+    global Session
+    Session = _orm.sessionmaker(bind=engine)

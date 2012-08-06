@@ -13,7 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from sqlalchemy import Table, Column
+from sqlalchemy import Table, Column, ForeignKey
 from sqlalchemy import Integer, String
 
 import base
@@ -21,5 +21,5 @@ import base
 file_set_files = Table('file_set_files', base.Base.metadata,
     Column('file_id', Integer, ForeignKey('file.id'),
         primary_key=True, nullable=False),
-    Column('file_set_id', Integer, ForeignKey('file_set.id'),
+    Column('file_set_id', Integer, ForeignKey('fileset.id'),
         primary_key=True, nullable=False))

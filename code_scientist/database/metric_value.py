@@ -21,24 +21,26 @@ import base
 
 def _make_class_dict(kind):
     lower_kind = kind.lower()
+    kind_id = lower_kind + '_id'
     kind_metric_value = lower_kind + '_metric_value'
     result = {
-        '__tablename__': lower_kind + '_metric_value',
+        '__tablename__': kind_metric_value,
 
-        'id': Column(Integer, primary_key=True),
+        'id': Column('id', Integer, primary_key=True),
         'value': Column(String),
 
-        'instrument_id': Column(Integer, ForeignKey('instrument.id')),
-        'metric_id': Column(Integer, ForeignKey('metric.id')),
-        lower_kind + '_id': Column(Integer, ForeignKey(
-                lower_kind + '_id')),
+        'instrument_id': Column('instrument_id', Integer,
+            ForeignKey('instrument.id')),
+        'metric_id': Column('metric_id', Integer, ForeignKey('metric.id')),
+        kind_id: Column(kind_id, Integer, ForeignKey(
+                lower_kind + '.id')),
 
         'instrument': relationship('Instrument', backref=kind_metric_value),
         'metric': relationship('Metric', backref=kind_metric_value),
         lower_kind: relationship(kind, backref=kind_metric_value),
 
         '__table_args__': (UniqueConstraint('instrument_id', 'metric_id',
-                        lower_kind + '_id'), {})
+                        kind_id), {})
     }
     return result
 
