@@ -19,6 +19,7 @@ Base = declarative_base()
 
 def __eq__(self, sister):
     assert self.id is not None
+    assert sister.id is not None
     return self.id == sister.id
 
 Base.__eq__ = __eq__

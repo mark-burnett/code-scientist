@@ -1,52 +1,23 @@
-code:
-    type: git
-    url: 'ssh://git/srv/git/genome.git'
-
-file_sets:
-    core_code:
-        - {base_path: lib/perl/Genome, match: "*.pm", language: perl}
-    core_tests:
-        - {base_path: lib/perl/Genome, match: "*.t", language: perl}
-
 &standard_time
     start_time: 1/1/2010
     period: 1 week
 
+repositories:
+    code_scientist:
+        kind: git
+        url: https://github.com/mark-burnett/filament-dynamics.git
+
+        file_groups:
+            python_code:
+                - {base_path: actin_dynamics, match: "*.py", language: python}
+            unit_tests:
+                - {base_path: unit_tests, match: "*.py", language: python}
+                - {base_path: tests, match: "*.py", language: python}
+
 reports:
-  - type: TimeCourseFigure
-    input: [core_code, core_tests]
-    parameters:
-        filename: 'sloc_v_time.png'
-        metric: sloc
-        time: *standard_time
-
-  - class: TimeCourseFigure
-    fixed_parameters:
-        filename: 'sloc_growth_v_time.png'
-        derivative: True
-    variable_parameters:
-        metric: sloc
-
-  - class: TimeCourseFigure
-    fixed_parameters:
-        filename: 'duplication_v_time.png'
-    variable_parameters:
-        metric: duplication
-        metric_component: fraction
-
-  - class: DistributionFigure
-    fixed_parameters:
-        filename: 'duplication_distribution.png'
-        current_snapshot: True
-        smooth: True
-    variable_parameters:
-        metric: duplication
-        metric_component: counts
-
-  - class: TextReport
-    fixed_parameters:
-        filename: 'duplication_report.txt'
-        template: 'templates/duplication_report.template'
-        current_snapshot: True
-    variable_parameters:
-        metric: duplication
+    metrics_v_time.csv:
+        kind: TimeCourseCSV
+        *standard_time
+        columns:
+            - {metric: sloc, repository: code_scientist, file_group: python_code}
+            - {metric: sloc, repository: code_scientist, file_group: unit_tests}
