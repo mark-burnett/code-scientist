@@ -15,7 +15,7 @@
 
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import Integer, String, DateTime
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 
 import base
 
@@ -27,4 +27,5 @@ class Snapshot(base.Base):
     time = Column(DateTime)
 
     repository_id = Column(Integer, ForeignKey('repository.id'))
-    repository = relationship('Repository', backref='snapshots')
+    repository = relationship('Repository', backref=backref('snapshots',
+        order_by=time))

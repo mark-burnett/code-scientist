@@ -17,7 +17,7 @@ import base_testcase
 
 import datetime
 
-from code_scientist.database import Snapshot
+from code_scientist.database import Repository, Snapshot
 
 class SnapshotTest(base_testcase.BaseDatabaseTest):
     def test_construction(self):
@@ -27,3 +27,41 @@ class SnapshotTest(base_testcase.BaseDatabaseTest):
         self.session.commit()
         snapshot2 = self.session.query(Snapshot).first()
         self.assertIs(snapshot, snapshot2)
+
+    def test_repository_relationship(self):
+        repo = Repository()
+        snapshot = Snapshot(repository=repo,
+                time=datetime.datetime(year=1981, month=10, day=26, hour=10))
+        self.session.add(repo)
+        self.session.commit()
+
+        ss2 = self.session.query(Snapshot).first()
+
+        self.assertEqual(repo, ss2.repository)
+
+    def test_repository_backref(self):
+        repo = Repository()
+        snapshot = Snapshot(repository=repo,
+                time=datetime.datetime(year=1981, month=10, day=26, hour=10))
+        self.session.add(repo)
+        self.session.commit()
+
+        repo2 = self.session.query(Repository).first()
+
+        self.assertEqual(repo, repo2)
+        self.assertEqual(1, len(repo2.snapshots))
+        self.assertEqual(snapshot, repo2.snapshots[0])
+
+    def test_repository_backref_ordering(self):
+        repo = Repository()
+        ss_a = Snapshot(repository=repo,
+                time=datetime.datetime(year=1981, month=10, day=26, hour=10))
+        self.session.add(repo)
+        self.session.commit()
+
+        ss_b = Snapshot(repository=repo,
+                time=datetime.datetime(year=1980, month=4, day=25, hour=6))
+        self.session.commit()
+
+        self.assertEqual(ss_b, repo.snapshots[0])
+        self.assertEqual(ss_a, repo.snapshots[1])
