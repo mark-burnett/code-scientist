@@ -28,4 +28,7 @@ class FileSet(base.Base):
 
     snapshot = relationship('Snapshot', backref='file_sets')
     file_set_category = relationship('FileSetCategory', backref='file_sets')
-    files = relationship('File', secondary='file_set_files', backref='file_sets')
+    files = relationship('File', secondary='file_set_files',
+            backref='file_sets')
+
+    repository = relationship('Repository', secondary='snapshot', uselist=False)
