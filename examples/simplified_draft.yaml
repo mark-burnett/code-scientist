@@ -10,9 +10,16 @@ repositories:
         file_groups:
             python_code:
                 - {base_path: actin_dynamics, match: "*.py", language: python}
-            unit_tests:
+            python_unit_tests:
                 - {base_path: unit_tests, match: "*.py", language: python}
                 - {base_path: tests, match: "*.py", language: python}
+
+            cpp_code:
+                - {base_path: cpp_stochastic/src, match: "*.cpp", language: cpp}
+                - {base_path: cpp_stochastic/pyext, match: "*.cpp", language: cpp}
+                - {base_path: cpp_stochastic/include, match: "*.h", language: cpp}
+            cpp_unit_tests:
+                - {base_path: cpp_stochastic/tests, match: "*.cpp", language: cpp}
 
 reports:
     metrics_v_time.csv:
@@ -20,4 +27,4 @@ reports:
         *standard_time
         columns:
             - {metric: sloc, repository: code_scientist, file_group: python_code}
-            - {metric: sloc, repository: code_scientist, file_group: unit_tests}
+            - {metric: sloc, repository: code_scientist, file_group: python_unit_tests}

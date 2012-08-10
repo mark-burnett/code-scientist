@@ -13,17 +13,7 @@
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-import base_testcase
-
-import mocks
-
 from code_scientist.database import Instrument
 
-class InstrumentTest(base_testcase.BaseDatabaseTest):
-    def test_construction(self):
-        inst = Instrument(name='MockInstrument', revision='rev str')
-
-        self.session.add(inst)
-        self.session.commit()
-        inst2 = self.session.query(Instrument).first()
-        self.assertIs(inst, inst2)
+class MockInstrument(Instrument):
+    __mapper_args__ = {'polymorphic_identity': 'MockInstrument'}

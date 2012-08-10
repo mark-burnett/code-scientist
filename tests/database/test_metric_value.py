@@ -23,7 +23,7 @@ from code_scientist.database import Metric, Instrument
 
 class BaseMetricValueTest(object):
     def make_metric_value_object(self):
-        instrument = Instrument(name='instrument_1')
+        instrument = Instrument(name='instrument_1', revision='rev_1')
         metric = Metric(name='metric_1')
         obj = self.cls()
         mv_obj = self.mv_cls(metric=metric, instrument=instrument,

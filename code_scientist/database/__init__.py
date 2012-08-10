@@ -15,7 +15,7 @@
 
 import sqlalchemy as _sa
 import sqlalchemy.orm as _orm
-import logging
+import logging as _logging
 
 import base as _base
 import tables as _tables
@@ -34,13 +34,13 @@ from metric_value import FunctionMetricValue, FileMetricValue
 from metric_value import FileSetMetricValue, SnapshotMetricValue
 
 def initialize(engine_string='sqlite://'):
-    logging.debug('Creating SQLAlchemy engine for string: %s', engine_string)
+    _logging.debug('Creating SQLAlchemy engine for string: %s', engine_string)
     engine = _sa.create_engine(engine_string)
 
-    logging.debug('Creating tables.')
+    _logging.debug('Creating tables.')
     _base.Base.metadata.create_all(engine)
     _base.Base.metadata.bind = engine
 
-    logging.debug('Creating Session class.')
+    _logging.debug('Creating Session class.')
     global Session
     Session = _orm.sessionmaker(bind=engine)
