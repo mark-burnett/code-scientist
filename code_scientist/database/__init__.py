@@ -43,4 +43,4 @@ def initialize(engine_string='sqlite://'):
 
     _logging.debug('Creating Session class.')
     global Session
-    Session = _orm.sessionmaker(bind=engine)
+    Session = _orm.scoeped_session(_orm.sessionmaker(bind=engine))
