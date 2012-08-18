@@ -1,0 +1,11 @@
+interesting tasks:
+    figure out what metrics need to be generated
+    optimize that metric collection scheme
+
+    instrument plugin system
+    report plugin system
+
+immediate tasks:
+    write something that explicitly creates some object model
+        repo object, single snapshot object, some file sets with categories
+        executes instruments at particular granularities
