@@ -22,4 +22,4 @@ class Metric(base.Base):
     __tablename__ = 'metric'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String, index=True)

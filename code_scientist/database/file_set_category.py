@@ -23,4 +23,4 @@ class FileSetCategory(base.Base):
     __tablename__ = 'file_set_category'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String, index=True)

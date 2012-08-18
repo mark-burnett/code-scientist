@@ -29,19 +29,15 @@ def _make_class_dict(kind):
         'id': Column('id', Integer, primary_key=True),
         'value': Column(String),
 
-        'instrument_id': Column('instrument_id', Integer,
-            ForeignKey('instrument.id'), nullable=False),
         'metric_id': Column('metric_id', Integer,
             ForeignKey('metric.id'), nullable=False),
         kind_id: Column(kind_id, Integer, ForeignKey(
                 lower_kind + '.id'), nullable=False),
 
-        'instrument': relationship('Instrument', backref=kind_metric_value),
         'metric': relationship('Metric', backref=kind_metric_value),
         lower_kind: relationship(kind, backref=kind_metric_value),
 
-        '__table_args__': (UniqueConstraint('instrument_id', 'metric_id',
-                        kind_id), {})
+        '__table_args__': (UniqueConstraint('metric_id', kind_id), {})
     }
     return result
 

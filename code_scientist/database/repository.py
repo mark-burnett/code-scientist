@@ -25,3 +25,4 @@ class Repository(base.Base):
     name = Column(String)
     kind = Column(String)
     url = Column(String)
+    path = Column(String)

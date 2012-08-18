@@ -23,8 +23,8 @@ class Snapshot(base.Base):
     __tablename__ = 'snapshot'
 
     id = Column(Integer, primary_key=True)
-    commit_id = Column(String)
-    time = Column(DateTime)
+    commit_id = Column(String, index=True)
+    time = Column(DateTime, index=True)
 
     repository_id = Column(Integer, ForeignKey('repository.id'))
     repository = relationship('Repository', backref=backref('snapshots',

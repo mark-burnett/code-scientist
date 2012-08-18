@@ -19,56 +19,42 @@ from code_scientist.database import FunctionMetricValue, FileMetricValue
 from code_scientist.database import FileSetMetricValue, SnapshotMetricValue
 
 from code_scientist.database import Function, File, FileSet, Snapshot
-from code_scientist.database import Metric, Instrument
+from code_scientist.database import Metric
 
 class BaseMetricValueTest(object):
     def make_metric_value_object(self):
-        instrument = Instrument(name='instrument_1', revision='rev_1')
         metric = Metric(name='metric_1')
         obj = self.cls()
-        mv_obj = self.mv_cls(metric=metric, instrument=instrument,
+        mv_obj = self.mv_cls(metric=metric, 
                 **{self.forward_name: obj})
 
         self.session.add(mv_obj)
         self.session.commit()
 
-        return mv_obj, metric, instrument, obj
+        return mv_obj, metric, obj
 
     def test_metric_relationship(self):
-        mv_obj, metric, instrument, obj = self.make_metric_value_object()
+        mv_obj, metric, obj = self.make_metric_value_object()
         mv_obj2 = self.session.query(self.mv_cls).first()
 
         self.assertEqual(mv_obj, mv_obj2)
         self.assertEqual(metric, mv_obj2.metric)
 
     def test_metric_backref(self):
-        mv_obj, metric, instrument, obj = self.make_metric_value_object()
+        mv_obj, metric, obj = self.make_metric_value_object()
         mv_obj2 = self.session.query(self.mv_cls).first()
 
         self.assertIn(mv_obj2, getattr(metric, self.backref_name))
 
-    def test_instrument_relationship(self):
-        mv_obj, metric, instrument, obj = self.make_metric_value_object()
-        mv_obj2 = self.session.query(self.mv_cls).first()
-
-        self.assertEqual(mv_obj, mv_obj2)
-        self.assertEqual(instrument, mv_obj2.instrument)
-
-    def test_instrument_backref(self):
-        mv_obj, metric, instrument, obj = self.make_metric_value_object()
-        mv_obj2 = self.session.query(self.mv_cls).first()
-
-        self.assertIn(mv_obj2, getattr(instrument, self.backref_name))
-
     def test_object_relationship(self):
-        mv_obj, metric, instrument, obj = self.make_metric_value_object()
+        mv_obj, metric, obj = self.make_metric_value_object()
         mv_obj2 = self.session.query(self.mv_cls).first()
 
         self.assertEqual(mv_obj, mv_obj2)
         self.assertEqual(obj, getattr(mv_obj2, self.forward_name))
 
     def test_object_backref(self):
-        mv_obj, metric, instrument, obj = self.make_metric_value_object()
+        mv_obj, metric, obj = self.make_metric_value_object()
         mv_obj2 = self.session.query(self.mv_cls).first()
 
         self.assertIn(mv_obj2, getattr(obj, self.backref_name))

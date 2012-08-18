@@ -28,7 +28,6 @@ from repository import Repository
 from file_set_category import FileSetCategory
 
 from metric import Metric
-from instrument import Instrument
 
 from metric_value import FunctionMetricValue, FileMetricValue
 from metric_value import FileSetMetricValue, SnapshotMetricValue
@@ -43,4 +42,6 @@ def initialize(engine_string='sqlite://'):
 
     _logging.debug('Creating Session class.')
     global Session
-    Session = _orm.scoeped_session(_orm.sessionmaker(bind=engine))
+    global UnscopedSession
+    UnscopedSession = _orm.sessionmaker(bind=engine)
+    Session = _orm.scoped_session(UnscopedSession)
