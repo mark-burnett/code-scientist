@@ -24,7 +24,7 @@ from function import Function
 from file import File
 from file_set import FileSet
 from snapshot import Snapshot
-from repository import Repository, GitRepository
+from repository import Repository
 from file_set_category import FileSetCategory
 
 from metric import Metric
