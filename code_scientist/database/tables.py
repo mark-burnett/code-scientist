@@ -14,12 +14,22 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from sqlalchemy import Table, Column, ForeignKey
-from sqlalchemy import Integer, String
+from sqlalchemy import Integer
 
 import base
 
-file_set_files = Table('file_set_files', base.Base.metadata,
-    Column('file_id', Integer, ForeignKey('file.id'),
-        primary_key=True, nullable=False),
-    Column('file_set_id', Integer, ForeignKey('fileset.id'),
-        primary_key=True, nullable=False))
+def make_many_to_many_table(a, b):
+    table_name = "%s_%ss" % (a, b)
+    result = Table(table_name, base.Base.metadata,
+            Column('%s_id' % a, Integer, ForeignKey('%s.id' % a),
+                primary_key=True, nullable=False),
+            Column('%s_id' % b, Integer, ForeignKey('%s.id' % b),
+                primary_key=True, nullable=False))
+    return result
+
+file_set_files = make_many_to_many_table('file_set', 'file')
+
+snapshot_tags = make_many_to_many_table('snapshot', 'tag')
+file_set_tags = make_many_to_many_table('file_set', 'tag')
+file_tags     = make_many_to_many_table('file', 'tag')
+function_tags = make_many_to_many_table('function', 'tag')

@@ -25,6 +25,7 @@ from file import File
 from file_set import FileSet
 from snapshot import Snapshot
 from repository import Repository
+from tag import Tag
 
 from metric import Metric
 
