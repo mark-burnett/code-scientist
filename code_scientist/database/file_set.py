@@ -24,10 +24,8 @@ class FileSet(base.Base):
 
     id = Column(Integer, primary_key=True)
     snapshot_id = Column(Integer, ForeignKey('snapshot.id'))
-    file_set_category_id = Column(Integer, ForeignKey('file_set_category.id'))
 
     snapshot = relationship('Snapshot', backref='file_sets')
-    file_set_category = relationship('FileSetCategory', backref='file_sets')
     files = relationship('File', secondary='file_set_files',
             backref='file_sets')
 

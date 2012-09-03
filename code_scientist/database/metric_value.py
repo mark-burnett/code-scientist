@@ -27,7 +27,7 @@ def _make_class_dict(kind):
         '__tablename__': kind_metric_value,
 
         'id': Column('id', Integer, primary_key=True),
-        'value': Column(String),
+        'value': Column(String, nullable=False, index=True),
 
         'metric_id': Column('metric_id', Integer,
             ForeignKey('metric.id'), nullable=False),

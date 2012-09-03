@@ -22,4 +22,4 @@ class File(base.Base):
     __tablename__ = 'file'
 
     id = Column(Integer, primary_key=True)
-    path = Column(String)
+    path = Column(String, nullable=False)

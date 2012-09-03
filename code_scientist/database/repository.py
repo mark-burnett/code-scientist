@@ -22,7 +22,4 @@ class Repository(base.Base):
     __tablename__ = 'repository'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    kind = Column(String)
-    url = Column(String)
-    path = Column(String)
+    name = Column(String, index=True, nullable=False, unique=True)

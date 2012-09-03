@@ -23,7 +23,7 @@ class Function(base.Base):
     __tablename__ = 'function'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    file_id = Column(Integer, ForeignKey('file.id'))
+    name = Column(String, nullable=False)
+    file_id = Column(Integer, ForeignKey('file.id'), nullable=False)
 
     file = relationship('File', backref='functions')

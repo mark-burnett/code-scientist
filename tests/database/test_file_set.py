@@ -15,7 +15,7 @@
 
 import base_testcase
 
-from code_scientist.database import File, FileSet, FileSetCategory, Snapshot
+from code_scientist.database import File, FileSet, Snapshot
 
 class FileSetTest(base_testcase.BaseDatabaseTest):
     def test_file_relationship(self):
@@ -59,20 +59,3 @@ class FileSetTest(base_testcase.BaseDatabaseTest):
 
         self.assertEqual(1, len(snapshot.file_sets))
         self.assertIs(file_set, snapshot.file_sets[0])
-
-    def test_file_set_category_relationship(self):
-        fsc = FileSetCategory(name='test_category')
-        file_set = FileSet(file_set_category=fsc)
-        self.session.add(file_set)
-        self.session.commit()
-
-        fs2 = self.session.query(FileSet).first()
-        self.assertEqual(file_set, fs2)
-        self.assertEqual(fsc, fs2.file_set_category)
-
-    def test_file_set_category_backref(self):
-        fsc = FileSetCategory(name='test_category')
-        file_set = FileSet(file_set_category=fsc)
-
-        self.assertEqual(1, len(fsc.file_sets))
-        self.assertIs(file_set, fsc.file_sets[0])
