@@ -12,6 +12,7 @@
 #
 #    You should have received a copy of the GNU General Public License
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+import re
 
 from sqlalchemy import Column, ForeignKey, UniqueConstraint
 from sqlalchemy import Integer, String
@@ -19,27 +20,37 @@ from sqlalchemy.orm import relationship
 
 import base
 
-def _make_class_dict(kind):
-    lower_kind = kind.lower()
-    kind_id = lower_kind + '_id'
-    kind_metric_value = lower_kind + '_metric_values'
+def _make_class_dict(target_class_name):
+    _name = convert_from_camel(target_class_name)
+
+    table_name = "%s_metric_value" % _name
+    backref_name = "%s_metric_values" % _name
+
+    target_id = "%s_id" % _name
+    target_id_field =  "%s.id" % _name
+    target_name = _name
+
     result = {
-        '__tablename__': kind_metric_value,
+        '__tablename__': table_name,
 
         'id': Column('id', Integer, primary_key=True),
         'value': Column(String, nullable=False, index=True),
 
         'metric_id': Column('metric_id', Integer,
-            ForeignKey('metric.id'), nullable=False),
-        kind_id: Column(kind_id, Integer, ForeignKey(
-                lower_kind + '.id'), nullable=False),
+                ForeignKey('metric.id'), nullable=False),
+        target_id: Column(target_id, Integer,
+                ForeignKey(target_id_field), nullable=False),
 
-        'metric': relationship('Metric', backref=kind_metric_value),
-        lower_kind: relationship(kind, backref=kind_metric_value),
+        'metric': relationship('Metric', backref=backref_name),
+        target_name: relationship(target_class_name, backref=backref_name),
 
-        '__table_args__': (UniqueConstraint('metric_id', kind_id), {})
+        '__table_args__': (UniqueConstraint('metric_id', target_id), {})
     }
     return result
+
+def convert_from_camel(name):
+    s1 = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
+    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', s1).lower()
 
 
 def _make_metric_value_class(kind):
@@ -48,6 +59,6 @@ def _make_metric_value_class(kind):
     return new_class
 
 SnapshotMetricValue = _make_metric_value_class('Snapshot')
-FileSetMetricValue = _make_metric_value_class('FileSet')
-FileMetricValue = _make_metric_value_class('File')
+FileSetMetricValue  = _make_metric_value_class('FileSet')
+FileMetricValue     = _make_metric_value_class('File')
 FunctionMetricValue = _make_metric_value_class('Function')

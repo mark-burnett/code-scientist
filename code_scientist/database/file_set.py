@@ -16,14 +16,17 @@
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import Integer, String
 from sqlalchemy.orm import relationship
+from sqlalchemy.schema import UniqueConstraint
 
 import base
 
 class FileSet(base.Base):
-    __tablename__ = 'fileset'
+    __tablename__ = 'file_set'
 
     id = Column(Integer, primary_key=True)
     snapshot_id = Column(Integer, ForeignKey('snapshot.id'))
+    name = Column(String, nullable=False, index=True)
+    __table_args__ = (UniqueConstraint('snapshot_id', 'name'), {})
 
     snapshot = relationship('Snapshot', backref='file_sets')
     files = relationship('File', secondary='file_set_files',

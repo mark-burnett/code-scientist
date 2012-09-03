@@ -19,7 +19,7 @@ from code_scientist.database import Repository
 
 class RepositoryTest(base_testcase.BaseDatabaseTest):
     def test_construction(self):
-        repository = Repository(name='repository_1', url='http://lol/some/more')
+        repository = Repository(name='repository_1')
 
         self.session.add(repository)
         self.session.commit()

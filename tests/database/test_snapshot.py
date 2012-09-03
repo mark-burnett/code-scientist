@@ -29,7 +29,7 @@ class SnapshotTest(base_testcase.BaseDatabaseTest):
         self.assertIs(snapshot, snapshot2)
 
     def test_repository_relationship(self):
-        repo = Repository()
+        repo = Repository(name='foo')
         snapshot = Snapshot(repository=repo,
                 time=datetime.datetime(year=1981, month=10, day=26, hour=10))
         self.session.add(repo)
@@ -40,7 +40,7 @@ class SnapshotTest(base_testcase.BaseDatabaseTest):
         self.assertEqual(repo, ss2.repository)
 
     def test_repository_backref(self):
-        repo = Repository()
+        repo = Repository(name='foo')
         snapshot = Snapshot(repository=repo,
                 time=datetime.datetime(year=1981, month=10, day=26, hour=10))
         self.session.add(repo)
@@ -53,7 +53,7 @@ class SnapshotTest(base_testcase.BaseDatabaseTest):
         self.assertEqual(snapshot, repo2.snapshots[0])
 
     def test_repository_backref_ordering(self):
-        repo = Repository()
+        repo = Repository(name='foo')
         ss_a = Snapshot(repository=repo,
                 time=datetime.datetime(year=1981, month=10, day=26, hour=10))
         self.session.add(repo)

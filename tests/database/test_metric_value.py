@@ -24,8 +24,9 @@ from code_scientist.database import Metric
 class BaseMetricValueTest(object):
     def make_metric_value_object(self):
         metric = Metric(name='metric_1')
-        obj = self.cls()
-        mv_obj = self.mv_cls(metric=metric, 
+        obj = self.obj
+        mv_obj = self.mv_cls(metric=metric,
+                value='bar',
                 **{self.forward_name: obj})
 
         self.session.add(mv_obj)
@@ -63,7 +64,8 @@ class FunctionMetricValueTest(base_testcase.BaseDatabaseTest,
         BaseMetricValueTest):
     def setUp(self):
         self.mv_cls = FunctionMetricValue
-        self.cls = Function
+        file = File(path='bar')
+        self.obj = Function(name='foo', file=file)
         self.backref_name = 'function_metric_values'
         self.forward_name = 'function'
         base_testcase.BaseDatabaseTest.setUp(self)
@@ -72,7 +74,7 @@ class FileMetricValueTest(base_testcase.BaseDatabaseTest,
         BaseMetricValueTest):
     def setUp(self):
         self.mv_cls = FileMetricValue
-        self.cls = File
+        self.obj = File(path='bar')
         self.backref_name = 'file_metric_values'
         self.forward_name = 'file'
         base_testcase.BaseDatabaseTest.setUp(self)
@@ -81,16 +83,16 @@ class FileSetMetricValueTest(base_testcase.BaseDatabaseTest,
         BaseMetricValueTest):
     def setUp(self):
         self.mv_cls = FileSetMetricValue
-        self.cls = FileSet
-        self.backref_name = 'fileset_metric_values'
-        self.forward_name = 'fileset'
+        self.obj = FileSet(name='foo')
+        self.backref_name = 'file_set_metric_values'
+        self.forward_name = 'file_set'
         base_testcase.BaseDatabaseTest.setUp(self)
 
 class SnapshotMetricValueTest(base_testcase.BaseDatabaseTest,
         BaseMetricValueTest):
     def setUp(self):
         self.mv_cls = SnapshotMetricValue
-        self.cls = Snapshot
+        self.obj = Snapshot()
         self.backref_name = 'snapshot_metric_values'
         self.forward_name = 'snapshot'
         base_testcase.BaseDatabaseTest.setUp(self)

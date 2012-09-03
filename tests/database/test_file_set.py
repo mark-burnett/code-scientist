@@ -21,7 +21,7 @@ class FileSetTest(base_testcase.BaseDatabaseTest):
     def test_file_relationship(self):
         files = [File(path='test/path/%s.test' % i) for i in xrange(5)]
 
-        file_set = FileSet(files=files)
+        file_set = FileSet(name='bar', files=files)
         self.session.add(file_set)
         self.session.commit()
 
@@ -35,7 +35,7 @@ class FileSetTest(base_testcase.BaseDatabaseTest):
 
     def test_file_backref(self):
         files = [File(path='test/path/%s.test' % i) for i in xrange(5)]
-        file_set = FileSet(files=files)
+        file_set = FileSet(name='bar', files=files)
 
         for f in files:
             self.assertEqual(1, len(f.file_sets))
@@ -44,7 +44,7 @@ class FileSetTest(base_testcase.BaseDatabaseTest):
     def test_snapshot_relationship(self):
         snapshot = Snapshot()
 
-        file_set = FileSet(snapshot=snapshot)
+        file_set = FileSet(name='bar', snapshot=snapshot)
         self.session.add(file_set)
         self.session.commit()
 
@@ -55,7 +55,7 @@ class FileSetTest(base_testcase.BaseDatabaseTest):
 
     def test_snapshot_backref(self):
         snapshot = Snapshot()
-        file_set = FileSet(snapshot=snapshot)
+        file_set = FileSet(name='bar', snapshot=snapshot)
 
         self.assertEqual(1, len(snapshot.file_sets))
         self.assertIs(file_set, snapshot.file_sets[0])
