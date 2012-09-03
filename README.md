@@ -4,6 +4,7 @@ A software metrics package.
 
 ## Requirements
 
+argparse
 sqlalchemy
 
 ## Testing
